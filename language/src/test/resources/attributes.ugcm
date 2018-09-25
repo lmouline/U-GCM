@@ -1,0 +1,12 @@
+class A {
+    att att1: Short
+    att att2: Int
+    att att3: Long
+    att att4: Bool
+    att att5: Float
+    att att6: Double
+    att att7: Char
+    att att8: String
+
+    id myAttId: String
+}

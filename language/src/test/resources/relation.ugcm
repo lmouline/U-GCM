@@ -1,0 +1,10 @@
+class A {
+    contained b1s : B
+    ref b2: B[0, 1]
+
+    contained b3s: B[0,*] oppositeOf a
+}
+
+class B {
+    ref a: A[0,1] oppositeOf b3s
+}
