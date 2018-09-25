@@ -1,0 +1,16 @@
+package ${mmPackName};
+
+public class ${mmName}Universe extends org.kevoree.modeling.api.abs.AbstractKUniverse<${mmName}View, ${mmName}Universe, ${mmName}Model> {
+
+    protected ${mmName}Universe(org.kevoree.modeling.api.KModel p_model, long key) {
+        super(p_model, key);
+    }
+
+    @Override
+    protected ${mmName}View internal_create(long timePoint) {
+        return new ${mmPackName}.impl.${mmName}ViewImpl(timePoint,(org.kevoree.modeling.api.abs.AbstractKUniverse)this);
+    }
+
+}
+#* @vtlvariable name="mmPackName" type="java.lang.String" *#
+#* @vtlvariable name="mmName" type="java.lang.String" *#

@@ -54,38 +54,65 @@ public class JavaGenerator {
         properties.put("file.resource.loader.class",ClasspathResourceLoader.class.getName());
         Velocity.init(properties);
 
-        List<Class> modelClasses = model.getClasses();
+        String[] mmInfo = new JavaGeneratorHelper().metamodelInfo(mmName);
+        String mmPackage = mmInfo[0];
+        String mmEndName = mmInfo[1];
 
+        VelocityContext vCtx = new VelocityContext();
+        vCtx.put("mmPackName", mmPackage);
+        vCtx.put("mmName", mmEndName);
+
+        // Generate utilities
+        String universePath = mmPackage.replace('.', File.separatorChar) + File.separator + mmName + "Universe.java";
+        File universeFile = new File(outPath.getAbsolutePath() + File.separator + universePath);
+        velocify(vCtx, universeFile, "UniverseTemplate.vm");
+
+        vCtx.put("model", model);
+        String modelPath = mmPackage.replace('.', File.separatorChar) + File.separator + mmName + "Model.java";
+        File modelFile = new File(outPath.getAbsolutePath() + File.separator + modelPath);
+        velocify(vCtx, modelFile, "ModelTemplate.vm");
+
+        String viewPath = mmPackage.replace('.', File.separatorChar) + File.separator + mmName + "View.java";
+        File viewFile = new File(outPath.getAbsolutePath() + File.separator + viewPath);
+        velocify(vCtx, viewFile, "ViewTemplate.vm");
+
+        String viewImplPath = mmPackage.replace('.', File.separatorChar) + File.separator + "impl" + File.separator + mmName + "ViewImpl.java";
+        File viewImplFile = new File(outPath.getAbsolutePath() + File.separator + viewImplPath);
+        velocify(vCtx, viewImplFile, "ViewImplTemplate.vm");
+
+
+        vCtx.remove("model");
+
+
+
+        // Generate files for classes
+        vCtx.put("primHelper",new PrimitiveTypeHelper());
+        vCtx.put("helper", new JavaGeneratorHelper());
+
+        List<Class> modelClasses = model.getClasses();
         for (int i = 0; i < modelClasses.size(); i++) {
             Class c = modelClasses.get(i);
+            vCtx.put("class", c);
 
             String cPath = c.getFqn().replace('.',File.separatorChar) + ".java";
             File apiFile = new File(outPath.getAbsolutePath() + File.separator + cPath);
-            velocify(c, mmName, apiFile, "ClassTemplate.vm");
+            velocify(vCtx, apiFile, "ClassTemplate.vm");
 
             String implPath = c.getPackName().replace('.', File.separatorChar) + File.separator + "impl" + File.separator + c.getName() + "Impl.java";
             File implFile = new File(outPath.getAbsolutePath() + File.separator + implPath);
-            velocify(c,mmName,implFile,"ClassImplTemplate.vm");
+            velocify(vCtx,implFile,"ClassImplTemplate.vm");
 
             String metaPath = c.getPackName().replace('.', File.separatorChar) + File.separator + "meta" + File.separator + "Meta" + c.getName() + ".java";
             File metaFile = new File(outPath.getAbsolutePath() + File.separator + metaPath);
-            velocify(c,mmName,metaFile,"MetaClassTemplate.vm");
+            velocify(vCtx,metaFile,"MetaClassTemplate.vm");
         }
     }
 
-    private static void velocify(Class ducClass, String mmName, File localFile, String templateName) throws IOException {
+    private static void velocify(VelocityContext context, File localFile, String templateName) throws IOException {
         Template template = Velocity.getTemplate(templateName);
-        VelocityContext vCtx = new VelocityContext();
-        vCtx.put("class", ducClass);
-        vCtx.put("primHelper",new PrimitiveTypeHelper());
-        vCtx.put("helper", new JavaGeneratorHelper());
-        String[] mmInfo = new JavaGeneratorHelper().metamodelInfo(mmName);
-        vCtx.put("mmPackName", mmInfo[0]);
-        vCtx.put("mmName", mmInfo[1]);
-
         Files.createDirectories(localFile.getParentFile().toPath());
         PrintWriter pw = new PrintWriter(localFile);
-        template.merge(vCtx, pw);
+        template.merge(context, pw);
         pw.flush();
         pw.close();
     }

@@ -1,0 +1,29 @@
+package $mmPackName;
+
+public class ${mmName}Model extends org.kevoree.modeling.api.abs.AbstractKModel<${mmName}Universe> {
+
+private org.kevoree.modeling.api.meta.MetaModel _metaModel;
+
+    public ${mmName}Model() {
+        super();
+        _metaModel = new org.kevoree.modeling.api.abs.AbstractMetaModel("${mmName}", -1);
+        org.kevoree.modeling.api.meta.MetaClass[] tempMetaClasses = new org.kevoree.modeling.api.meta.MetaClass[${model.getClasses().size()}];
+        #foreach($class in $model.getClasses())
+            tempMetaClasses[${class.index}] = ${class.packName}.meta.Meta${class.name}.getInstance();
+        #end
+        ((org.kevoree.modeling.api.abs.AbstractMetaModel) _metaModel).init(tempMetaClasses);
+    }
+
+    @Override
+    protected ${mmName}Universe internal_create(long key) {
+        return new ${mmName}Universe(this,key);
+    }
+
+    @Override
+    public org.kevoree.modeling.api.meta.MetaModel metaModel() {
+        return _metaModel;
+    }
+}
+#* @vtlvariable name="model" type="duc.ugcm.ast.Model" *#
+#* @vtlvariable name="mmPackName" type="java.lang.String" *#
+#* @vtlvariable name="mmName" type="java.lang.String" *#

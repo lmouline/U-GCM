@@ -1,0 +1,15 @@
+package $mmPackName;
+
+public interface ${mmName}View extends org.kevoree.modeling.api.KView {
+
+#foreach($class in $model.getClasses())
+#set($lastIdx = $class.fqn.lastIndexOf(".")+1)
+    public $class.fqn create$class.fqn.substring($lastIdx)();
+#end
+
+    @Override
+    public ${mmPackName}.${mmName}Universe universe();
+}
+#* @vtlvariable name="model" type="duc.ugcm.ast.Model" *#
+#* @vtlvariable name="mmPackName" type="java.lang.String" *#
+#* @vtlvariable name="mmName" type="java.lang.String" *#
