@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class TestParser {
 
@@ -17,7 +18,7 @@ public class TestParser {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("emptyModel.ugcm");
 
         Assertions.assertDoesNotThrow(() -> {
-            Model model = Parser.parse(CharStreams.fromStream(in));
+            Model model = new Parser().parse(CharStreams.fromStream(in));
             Assertions.assertNotNull(model);
             Assertions.assertEquals(0, model.getClasses().size());
         });
@@ -25,15 +26,35 @@ public class TestParser {
 
     @Test
     public void testModelWithClasses() {
-        InputStream in = this.getClass().getClassLoader().getResourceAsStream("modelWithClasses.ugcm");
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("classes.ugcm");
 
         Assertions.assertDoesNotThrow(() -> {
-            Model model = Parser.parse(CharStreams.fromStream(in));
+            Model model = new Parser().parse(CharStreams.fromStream(in));
             Assertions.assertEquals(4, model.getClasses().size());
-            Assertions.assertTrue(model.containClass("A"));
-            Assertions.assertTrue(model.containClass("B"));
-            Assertions.assertTrue(model.containClass("C"));
+            Assertions.assertTrue(model.containClass("A.B"));
+            Assertions.assertTrue(model.containClass("B.C"));
+            Assertions.assertTrue(model.containClass("C.D"));
             Assertions.assertTrue(model.containClass("D"));
+
+            Class aClass = model.getClass("A.B");
+            Assertions.assertEquals("A", aClass.getPackName());
+            Assertions.assertEquals("B", aClass.getName());
+            Assertions.assertEquals("A.B", aClass.getFqn());
+
+            aClass = model.getClass("B.C");
+            Assertions.assertEquals("B", aClass.getPackName());
+            Assertions.assertEquals("C", aClass.getName());
+            Assertions.assertEquals("B.C", aClass.getFqn());
+
+            aClass = model.getClass("C.D");
+            Assertions.assertEquals("C", aClass.getPackName());
+            Assertions.assertEquals("D", aClass.getName());
+            Assertions.assertEquals("C.D", aClass.getFqn());
+
+            aClass = model.getClass("D");
+            Assertions.assertNull(aClass.getPackName());
+            Assertions.assertEquals("D", aClass.getName());
+            Assertions.assertEquals("D", aClass.getFqn());
         });
     }
 
@@ -42,21 +63,30 @@ public class TestParser {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("inheritance.ugcm");
 
         Assertions.assertDoesNotThrow(() -> {
-            Model model = Parser.parse(CharStreams.fromStream(in));
-            Assertions.assertEquals(2, model.getClasses().size());
-            Assertions.assertTrue(model.containClass("A"));
+            Model model = new Parser().parse(CharStreams.fromStream(in));
+            Assertions.assertEquals(3, model.getClasses().size());
+            Assertions.assertTrue(model.containClass("P.A"));
             Assertions.assertTrue(model.containClass("B"));
+            Assertions.assertTrue(model.containClass("C"));
 
-            Class parentB = model.getClass("B").getParent();
+            List<Class> parentB = model.getClass("B").getParents();
             Assertions.assertNotNull(parentB);
-            Assertions.assertEquals("A",parentB.getName());
+            Assertions.assertEquals(1, parentB.size());
+            Assertions.assertEquals("P.A",parentB.get(0).getFqn());
+
+            List<Class> parentC = model.getClass("C").getParents();
+            Assertions.assertNotNull(parentC);
+            Assertions.assertEquals(2, parentC.size());
+            Assertions.assertEquals("P.A",parentC.get(0).getFqn());
+            Assertions.assertEquals("B",parentC.get(1).getFqn());
+
         });
     }
 
     @Test
     public void testAttributes() throws IOException {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("attributes.ugcm");
-        Model model = Parser.parse(CharStreams.fromStream(in));
+        Model model = new Parser().parse(CharStreams.fromStream(in));
 
         Class theClass = model.getClass("A");
         Assertions.assertNotNull(theClass);
@@ -116,7 +146,7 @@ public class TestParser {
     @Test
     public void testRelation() throws IOException {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("relation.ugcm");
-        Model model = Parser.parse(CharStreams.fromStream(in));
+        Model model = new Parser().parse(CharStreams.fromStream(in));
 
         Class classA = model.getClass("A");
         Class classB = model.getClass("B");

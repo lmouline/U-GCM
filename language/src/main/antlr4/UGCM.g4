@@ -12,9 +12,10 @@ ML_COMMENT : '/*' .*? '*/' -> skip;
 
 
 modelDcl: (classDcl)*;
-classDcl: 'class' name=IDENT parent=parentDcl? '{' (attributeDcl|relationDcl)* '}';
-parentDcl: 'extends' IDENT;
+fullIdentDcl: IDENT ('.' IDENT)*;
+classDcl: 'class' name=fullIdentDcl parent=parentDcl? '{' (attributeDcl|relationDcl)* '}';
+parentDcl: ':' fullIdentDcl (',' fullIdentDcl)*;
 attributeDcl: ('att' | 'id') name=IDENT ':' type=IDENT;
-relationDcl: ('ref' | 'contained') name=IDENT ':' type=IDENT multiplicity=multiplicityDcl? opposite=oppisteDcl?;
+relationDcl: ('ref' | 'contained') name=IDENT ':' type=fullIdentDcl multiplicity=multiplicityDcl? opposite=oppisteDcl?;
 multiplicityDcl: '[' lower=('*'|NUMBER) ',' upper=('*'|NUMBER) ']';
 oppisteDcl: 'oppositeOf' opp=IDENT;

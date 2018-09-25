@@ -6,6 +6,12 @@ public class Relation implements Property {
     private Relation oppositeOf;
     private Multiplicity multiplicity;
     private boolean isContained;
+    private int index;
+
+    public Relation(String name, Class type, boolean isContained, int index) {
+       this(name, type, isContained);
+        this.index = index;
+    }
 
     public Relation(String name, Class type, boolean isContained) {
         this.name = name;
@@ -27,6 +33,15 @@ public class Relation implements Property {
 
     public void setType(Class type) {
         this.type = type;
+    }
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public Relation getOppositeOf() {
@@ -51,5 +66,9 @@ public class Relation implements Property {
 
     public void setContained(boolean contained) {
         isContained = contained;
+    }
+
+    public boolean isMultiple() {
+        return multiplicity != null && multiplicity.getUpperBound() > 1;
     }
 }

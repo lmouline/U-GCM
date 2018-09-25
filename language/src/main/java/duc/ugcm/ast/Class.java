@@ -8,12 +8,17 @@ import java.util.Map;
 public class Class {
 
     private String name;
-    private Class parent;
+    private String packName;
+    private List<Class> parent;
     private Map<String, Property> properties;
+    private int index;
 
-    public Class(String name) {
+    public Class(String packName, String name, int index) {
        this.name = name;
+       this.packName = packName;
        properties = new HashMap<>();
+       this.parent = new ArrayList<>();
+       this.index = index;
     }
 
     public String getName() {
@@ -24,12 +29,28 @@ public class Class {
         this.name = name;
     }
 
-    public Class getParent() {
-        return parent;
+    public String getPackName() {
+        return packName;
     }
 
-    public void setParent(Class parent) {
-        this.parent = parent;
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
+
+    public String getFqn() {
+        if(packName != null) {
+            return packName + '.' + name;
+        }
+
+        return name;
+    }
+
+    public void addParent(Class parent) {
+        this.parent.add(parent);
+    }
+
+    public List<Class> getParents() {
+        return parent;
     }
 
     public boolean containProperty(String name) {
@@ -53,5 +74,10 @@ public class Class {
 
         return res;
     }
+
+    public int getIndex() {
+        return this.index;
+    }
+
 
 }

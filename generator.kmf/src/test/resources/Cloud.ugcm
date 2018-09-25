@@ -1,0 +1,14 @@
+class duc.ugcm.cloud.Cloud {
+    contained nodes : duc.ugcm.cloud.Node[0,*]
+    contained elements : duc.ugcm.cloud.Element[0,*]
+}
+
+class duc.ugcm.cloud.Node {
+    id name : String
+    att value : String
+}
+
+class duc.ugcm.cloud.Element {
+    id name : String
+    att value : String
+}

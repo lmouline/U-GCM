@@ -1,0 +1,30 @@
+package ${class.packName};
+
+
+public interface ${class.name} extends org.kevoree.modeling.api.KObject#foreach($parent in $class.parents), $parent.fqn#end {
+
+#foreach($prop in $class.properties)
+#if($prop.class.name.equals("duc.ugcm.ast.Attribute"))
+    public ${primHelper.toJavaType(${prop.getType()})} get${helper.upperFirst(${prop.name})}();
+    public ${class.fqn} set${helper.upperFirst(${prop.name})}(${primHelper.toJavaType(${prop.getType()})} newValue);
+#elseif($prop.class.name.equals("duc.ugcm.ast.Relation"))
+#if($prop.isMultiple())
+    public ${class.fqn} add${helper.upperFirst($prop.name)}(${prop.type.fqn} toAdd);
+    public ${class.fqn} remove${helper.upperFirst($prop.name)}(${prop.type.fqn} toAdd);
+    public org.kevoree.modeling.api.KDefer<${prop.type.fqn}[]> get${helper.upperFirst($prop.name)}();
+    public int sizeOf${helper.upperFirst($prop.name)}();
+#else
+    public org.kevoree.modeling.api.KDefer<${prop.type.fqn}> get${helper.upperFirst($prop.name)}();
+    public ${class.fqn} set${helper.upperFirst($prop.name)}(${prop.type.fqn} newValue);
+#end
+#end
+#end
+
+    @Override
+    public ${mmPackName}.${mmName}View view();
+}
+#* @vtlvariable name="class" type="duc.ugcm.ast.Class" *#
+#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.PrimitiveTypeHelper" *#
+#* @vtlvariable name="helper" type="duc.ugcm.generator.kmf.JavaGeneratorHelper" *#
+#* @vtlvariable name="mmPackName" type="java.lang.String" *#
+#* @vtlvariable name="mmName" type="java.lang.String" *#

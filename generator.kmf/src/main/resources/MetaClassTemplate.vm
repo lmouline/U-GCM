@@ -1,0 +1,56 @@
+package ${class.packName}.meta;
+
+public class Meta${class.name} extends org.kevoree.modeling.api.abs.AbstractMetaClass {
+
+    private static Meta${class.name} INSTANCE = null;
+
+    public static Meta${class.name} getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Meta${class.name}();
+        }
+        return INSTANCE;
+    }
+
+    #foreach($prop in $class.properties)
+    #if($prop.class.name.equals("duc.ugcm.ast.Attribute"))
+public static final org.kevoree.modeling.api.meta.MetaAttribute ATT_${prop.name.toUpperCase()} = new org.kevoree.modeling.api.abs.AbstractMetaAttribute("${prop.name}", ${prop.index}, 0, #if($prop.isId())true#{else}false#end, ${primHelper.toKMFType($prop.getType())}, org.kevoree.modeling.api.extrapolation.DiscreteExtrapolation.instance());
+    #elseif($prop.class.name.equals("duc.ugcm.ast.Relation"))
+public static final org.kevoree.modeling.api.meta.MetaReference REF_${prop.name.toUpperCase()} = new org.kevoree.modeling.api.abs.AbstractMetaReference("${prop.name}", ${prop.index}, ${prop.isContained()}, !${prop.isMultiple()},
+            new org.kevoree.modeling.api.abs.LazyResolver() {
+                @Override
+                public org.kevoree.modeling.api.meta.Meta meta() {
+                    return ${prop.type.packName}.meta.Meta${prop.type.name}.getInstance();
+                }
+            }, null,new org.kevoree.modeling.api.abs.LazyResolver() {
+                @Override
+                public org.kevoree.modeling.api.meta.Meta meta() {
+                    return ${class.packName}.meta.Meta${class.name}.getInstance();
+                }
+            });
+
+    #end
+    #end
+
+
+    private Meta${class.name}() {
+        super("${class.fqn}", ${class.index});
+        org.kevoree.modeling.api.meta.Meta[] temp_all = new org.kevoree.modeling.api.meta.Meta[${class.properties.size()}];
+        #set($i = 0)
+        #foreach($prop in $class.properties)
+        #if($prop.class.name.equals("duc.ugcm.ast.Attribute"))
+        temp_all[${i}] = ATT_${prop.name.toUpperCase()};
+        #elseif($prop.class.name.equals("duc.ugcm.ast.Relation"))
+        temp_all[${i}] = REF_${prop.name.toUpperCase()};
+        #end
+        #set($i = $i +1)
+        #end
+
+        init(temp_all);
+    }
+
+}
+#* @vtlvariable name="class" type="duc.ugcm.ast.Class" *#
+#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.PrimitiveTypeHelper" *#
+#* @vtlvariable name="helper" type="duc.ugcm.generator.kmf.JavaGeneratorHelper" *#
+#* @vtlvariable name="mmPackName" type="java.lang.String" *#
+#* @vtlvariable name="mmName" type="java.lang.String" *#

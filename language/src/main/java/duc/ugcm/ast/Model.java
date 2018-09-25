@@ -21,7 +21,7 @@ public class Model {
     }
 
     public void addClass(Class toAdd) {
-        classes.put(toAdd.getName(), toAdd);
+        classes.put(toAdd.getFqn(), toAdd);
     }
 
     public List<Class> getClasses() {
