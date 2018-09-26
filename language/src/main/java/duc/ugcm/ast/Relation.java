@@ -8,11 +8,6 @@ public class Relation implements Property {
     private boolean isContained;
     private int index;
 
-    public Relation(String name, Class type, boolean isContained, int index) {
-       this(name, type, isContained);
-        this.index = index;
-    }
-
     public Relation(String name, Class type, boolean isContained) {
         this.name = name;
         this.type = type;
@@ -40,6 +35,7 @@ public class Relation implements Property {
         return index;
     }
 
+    @Override
     public void setIndex(int index) {
         this.index = index;
     }
@@ -70,5 +66,13 @@ public class Relation implements Property {
 
     public boolean isMultiple() {
         return multiplicity != null && multiplicity.getUpperBound() > 1;
+    }
+
+    @Override
+    public Property clone() {
+        Relation cloned = new Relation(this.name, this.type, this.isContained);
+        cloned.setOpposite(this.oppositeOf);
+        cloned.setMultiplicity(this.multiplicity);
+        return cloned;
     }
 }

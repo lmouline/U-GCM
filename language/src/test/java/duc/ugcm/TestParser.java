@@ -87,13 +87,13 @@ public class TestParser {
             List<Property> cProperties = model.getClass("C").getProperties();
             Set<String> cPropNames = new HashSet<>(cProperties.size());
             for (int i = 0; i < cProperties.size(); i++) {
+                Assertions.assertEquals(i+4, cProperties.get(i).getIndex());
                 cPropNames.add(cProperties.get(i).getName());
             }
             Assertions.assertEquals(3, cPropNames.size());
             Assertions.assertTrue(cPropNames.contains("Aa"));
             Assertions.assertTrue(cPropNames.contains("Bb"));
             Assertions.assertTrue(cPropNames.contains("Dd"));
-
 
         });
     }
@@ -226,4 +226,5 @@ public class TestParser {
         multiplicity = relation.getMultiplicity();
         Assertions.assertNull(multiplicity);
     }
+    
 }

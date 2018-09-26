@@ -7,11 +7,10 @@ public class Attribute implements Property {
     private boolean isId;
     private int index;
 
-    public Attribute(String name, PrimitiveType type, boolean isId, int index) {
+    public Attribute(String name, PrimitiveType type, boolean isId) {
         this.name = name;
         this.type = type;
         this.isId = isId;
-        this.index = index;
     }
 
     public String getName() {
@@ -21,6 +20,11 @@ public class Attribute implements Property {
     @Override
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public void setName(String name) {
@@ -41,5 +45,10 @@ public class Attribute implements Property {
 
     public void setId(boolean id) {
         isId = id;
+    }
+
+    @Override
+    public Property clone() {
+        return new Attribute(this.name, this.type, this.isId);
     }
 }
