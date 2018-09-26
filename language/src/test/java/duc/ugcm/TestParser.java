@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TestParser {
 
@@ -64,10 +66,11 @@ public class TestParser {
 
         Assertions.assertDoesNotThrow(() -> {
             Model model = new Parser().parse(CharStreams.fromStream(in));
-            Assertions.assertEquals(3, model.getClasses().size());
+            Assertions.assertEquals(4, model.getClasses().size());
             Assertions.assertTrue(model.containClass("P.A"));
             Assertions.assertTrue(model.containClass("B"));
             Assertions.assertTrue(model.containClass("C"));
+            Assertions.assertTrue(model.containClass("D"));
 
             List<Class> parentB = model.getClass("B").getParents();
             Assertions.assertNotNull(parentB);
@@ -76,9 +79,21 @@ public class TestParser {
 
             List<Class> parentC = model.getClass("C").getParents();
             Assertions.assertNotNull(parentC);
-            Assertions.assertEquals(2, parentC.size());
+            Assertions.assertEquals(3, parentC.size());
             Assertions.assertEquals("P.A",parentC.get(0).getFqn());
             Assertions.assertEquals("B",parentC.get(1).getFqn());
+            Assertions.assertEquals("D",parentC.get(2).getFqn());
+
+            List<Property> cProperties = model.getClass("C").getProperties();
+            Set<String> cPropNames = new HashSet<>(cProperties.size());
+            for (int i = 0; i < cProperties.size(); i++) {
+                cPropNames.add(cProperties.get(i).getName());
+            }
+            Assertions.assertEquals(3, cPropNames.size());
+            Assertions.assertTrue(cPropNames.contains("Aa"));
+            Assertions.assertTrue(cPropNames.contains("Bb"));
+            Assertions.assertTrue(cPropNames.contains("Dd"));
+
 
         });
     }
@@ -150,8 +165,10 @@ public class TestParser {
 
         Class classA = model.getClass("A");
         Class classB = model.getClass("B");
+        Class classC = model.getClass("pack.C");
         Assertions.assertNotNull(classA);
         Assertions.assertNotNull(classB);
+        Assertions.assertNotNull(classC);
 
         Property prop = classA.getProperty("b1s");
         Assertions.assertTrue(prop instanceof Relation);
@@ -201,6 +218,12 @@ public class TestParser {
         Assertions.assertEquals(B_a.getName(), opposite.getName());
         Assertions.assertEquals(relation.getName(), opposite_B_a.getName());
 
-
+        prop = classB.getProperty("c");
+        Assertions.assertTrue(prop instanceof Relation);
+        relation = (Relation) prop;
+        Assertions.assertEquals(classC.getFqn(), relation.getType().getFqn());
+        Assertions.assertFalse(relation.isContained());
+        multiplicity = relation.getMultiplicity();
+        Assertions.assertNull(multiplicity);
     }
 }

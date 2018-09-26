@@ -2,20 +2,22 @@ package duc.ugcm.generator.kmf;
 
 import duc.ugcm.ast.Class;
 import duc.ugcm.ast.Model;
+import duc.ugcm.parser.Parser;
+import org.antlr.v4.runtime.CharStreams;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Properties;
 
 public class JavaGenerator {
+    public static final String FILE_EXTENSION = ".ugcm";
+
     private static void cleanOutput(File rootOut) throws IOException{
         Files.walkFileTree(rootOut.toPath(), new FileVisitor<Path>() {
             @Override
@@ -46,6 +48,17 @@ public class JavaGenerator {
     }
 
 
+    public static void generate(File input, File outDir, String mmName) throws IOException {
+        String extension = input.getName();
+        extension = extension.substring(extension.lastIndexOf('.'));
+        if(!input.getName().endsWith(FILE_EXTENSION)) {
+            throw new RuntimeException("File extension is not supporter by the Java code generator. Extension accepted: " + FILE_EXTENSION + ". Here: " + extension);
+        }
+
+        FileInputStream is = new FileInputStream(input);
+        Model model = new Parser().parse(CharStreams.fromStream(is));
+        generate(model, outDir, mmName);
+    }
 
 
     public static void generate(Model model, File outPath, String mmName) throws IOException {

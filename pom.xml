@@ -12,6 +12,7 @@
     <modules>
         <module>language</module>
         <module>generator.kmf</module>
+        <module>maven.generator.kmf</module>
     </modules>
 
     <properties>

@@ -3,32 +3,32 @@ package ${class.packName}.impl;
 public class ${class.name}Impl extends org.kevoree.modeling.api.abs.AbstractKObject implements ${class.fqn} {
 
     public ${class.name}Impl(${mmPackName}.${mmName}View p_factory, long p_uuid, org.kevoree.modeling.api.meta.MetaClass p_metaClass) {
-        super(p_factory, p_uuid, p_metaclass);
+        super(p_factory, p_uuid, p_metaClass);
     }
 
 #foreach($prop in $class.properties)
     #if($prop.class.name.equals("duc.ugcm.ast.Attribute"))
     @Override
     public ${primHelper.toJavaType(${prop.getType()})} get${helper.upperFirst(${prop.name})}() {
-        return (${primHelper.toJavaType(${prop.getType()})}) get(${class.packName}.meta.META${class.name}.ATT_${prop.name.toUpperCase()});
+        return (${primHelper.toJavaType(${prop.getType()})}) get(${class.packName}.meta.Meta${class.name}.ATT_${prop.name.toUpperCase()});
     }
 
     @Override
     public ${class.fqn} set${helper.upperFirst(${prop.name})}(${primHelper.toJavaType(${prop.getType()})} newValue) {
-        set(${class.packName}.meta.META${class.name}.ATT_${prop.name.toUpperCase()}, newValue);
+        set(${class.packName}.meta.Meta${class.name}.ATT_${prop.name.toUpperCase()}, newValue);
         return this;
     }
     #elseif($prop.class.name.equals("duc.ugcm.ast.Relation"))
     #if($prop.isMultiple())
     @Override
     public ${class.fqn} add${helper.upperFirst($prop.name)}(${prop.type.fqn} toAdd) {
-        mutate(org.kevoree.modeling.api.KActionType.ADD, ${class.pack}.meta.Meta${class.name}.REF_${prop.name.toUpperCase()}, p_obj);
+        mutate(org.kevoree.modeling.api.KActionType.ADD, ${class.packName}.meta.Meta${class.name}.REF_${prop.name.toUpperCase()}, toAdd);
         return this;
     }
 
     @Override
-    public ${class.fqn} remove${helper.upperFirst($prop.name)}(${prop.type.fqn} toAdd) {
-        mutate(org.kevoree.modeling.api.KActionType.REMOVE, ${class.packName}.meta.Meta${class.name}.REF_${prop.name.toUpperCase()}, p_obj);
+    public ${class.fqn} remove${helper.upperFirst($prop.name)}(${prop.type.fqn} toRemove) {
+        mutate(org.kevoree.modeling.api.KActionType.REMOVE, ${class.packName}.meta.Meta${class.name}.REF_${prop.name.toUpperCase()}, toRemove);
         return this;
     }
 
@@ -48,7 +48,7 @@ public class ${class.name}Impl extends org.kevoree.modeling.api.abs.AbstractKObj
         return task;
     }
 
-    @Overide
+    @Override
     public int sizeOf${helper.upperFirst($prop.name)}() {
         return size(${class.packName}.meta.Meta${class.name}.REF_${prop.name.toUpperCase()});
     }
@@ -56,19 +56,19 @@ public class ${class.name}Impl extends org.kevoree.modeling.api.abs.AbstractKObj
 
     #else
     @Override
-    public org.kevoree.modeling.api.KDefer<${prop.type.fqn}> get${helper.upperFirst($prop.name)}(){
-        mutate(org.kevoree.modeling.api.KActionType.SET, ${class.packName}.meta.Meta${class.name}.REF_${prop.getName().toUpperCase()}, p_obj);
+    public ${class.fqn} set${helper.upperFirst($prop.name)}(${prop.type.fqn} newValue) {
+        mutate(org.kevoree.modeling.api.KActionType.SET, ${class.packName}.meta.Meta${class.name}.REF_${prop.getName().toUpperCase()}, newValue);
         return this;
     }
 
     @Override
-    public ${class.fqn} set${helper.upperFirst($prop.name)}(${prop.type.fqn} newValue) {
+    public org.kevoree.modeling.api.KDefer<${prop.type.fqn}> get${helper.upperFirst($prop.name)}(){
         final org.kevoree.modeling.api.abs.AbstractKDeferWrapper<${prop.getType().fqn}> task = new org.kevoree.modeling.api.abs.AbstractKDeferWrapper<${prop.getType().fqn}>();
-        this.internal_ref(${class.pack}.meta.Meta${class.name}.REF_${prop.getName().toUpperCase()}, new org.kevoree.modeling.api.Callback<org.kevoree.modeling.api.KObject[]>() {
+        this.internal_ref(${class.packName}.meta.Meta${class.name}.REF_${prop.getName().toUpperCase()}, new org.kevoree.modeling.api.Callback<org.kevoree.modeling.api.KObject[]>() {
             @Override
             public void on(org.kevoree.modeling.api.KObject[] kObjects) {
                 if(kObjects.length >0){
-                    task.initCallback().on((${ref.getType().fqn}) kObjects[0]);
+                    task.initCallback().on((${prop.getType().fqn}) kObjects[0]);
                 } else {
                     task.initCallback().on(null);
                 }

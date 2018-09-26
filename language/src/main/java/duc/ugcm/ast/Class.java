@@ -1,15 +1,12 @@
 package duc.ugcm.ast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Class {
 
     private String name;
     private String packName;
-    private List<Class> parent;
+    private List<Class> parents;
     private Map<String, Property> properties;
     private int index;
 
@@ -17,7 +14,7 @@ public class Class {
        this.name = name;
        this.packName = packName;
        properties = new HashMap<>();
-       this.parent = new ArrayList<>();
+       this.parents = new ArrayList<>();
        this.index = index;
     }
 
@@ -46,11 +43,11 @@ public class Class {
     }
 
     public void addParent(Class parent) {
-        this.parent.add(parent);
+        this.parents.add(parent);
     }
 
     public List<Class> getParents() {
-        return parent;
+        return parents;
     }
 
     public boolean containProperty(String name) {
@@ -68,11 +65,31 @@ public class Class {
     public List<Property> getProperties() {
         List<Property> res = new ArrayList<>();
 
-        for(String key: properties.keySet()) {
-            res.add(properties.get(key));
+        Set<String> visitedClass = new HashSet<>();
+        Map<String, Property> allProperties = new HashMap<>();
+        deepCollectProperties(allProperties, visitedClass);
+
+        for(String keyProp: allProperties.keySet()) {
+            res.add(allProperties.get(keyProp));
         }
 
         return res;
+    }
+
+    private void deepCollectProperties(Map<String, Property> props, Set<String> visited) {
+        if(visited.contains(this.name)) {
+            return;
+        }
+
+        for(String keyProp: this.properties.keySet()) {
+            if(!props.containsKey(keyProp)) {
+                props.put(keyProp, this.properties.get(keyProp));
+            }
+        }
+        visited.add(this.name);
+        for(Class parent: parents) {
+            parent.deepCollectProperties(props, visited);
+        }
     }
 
     public int getIndex() {

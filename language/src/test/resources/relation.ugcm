@@ -7,4 +7,9 @@ class A {
 
 class B {
     ref a: A[0,1] oppositeOf b3s
+    ref c: pack.C
+}
+
+class pack.C {
+
 }

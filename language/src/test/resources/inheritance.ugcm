@@ -1,3 +1,13 @@
-class P.A {}
-class B : P.A{}
-class C : P.A, B {}
+class P.A {
+    att Aa: Int
+}
+
+class B : P.A{
+    att Bb: Int
+}
+
+class D {
+    att Dd: Int
+}
+
+class C : P.A, B, D {}
