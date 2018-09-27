@@ -4,6 +4,7 @@ import duc.ugcm.UGCMLexer;
 import duc.ugcm.UGCMParser;
 import duc.ugcm.ast.*;
 import duc.ugcm.ast.Class;
+import duc.ugcm.ast.type.Type;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -37,7 +38,7 @@ public class Parser {
             for (UGCMParser.AttributeDclContext attDclCtx : classDclContext.attributeDcl()) {
                 boolean isId = attDclCtx.start.getText().equals("id");
                 String attName = attDclCtx.name.getText();
-                PrimitiveType type = PrimitiveTypeHelper.getType(attDclCtx.type.getText());
+                Type type = PrimitiveTypeHelper.getType(attDclCtx.type.getText());
 
                 createAttribute(newClass, attName, type, isId);
 
@@ -128,7 +129,7 @@ public class Parser {
         return newClass;
     }
 
-    private void createAttribute(Class toClass, String attName, PrimitiveType type, boolean isId) {
+    private void createAttribute(Class toClass, String attName, Type type, boolean isId) {
         if (toClass.containProperty(attName)) {
             throw new RuntimeException("A property with name " + attName + " already exists. Property names should be unique.");
         }

@@ -99,7 +99,7 @@ public class JavaGenerator {
 
 
         // Generate files for classes
-        vCtx.put("primHelper",new PrimitiveTypeHelper());
+        vCtx.put("primHelper",new TypeHelper());
         vCtx.put("helper", new JavaGeneratorHelper());
 
         List<Class> modelClasses = model.getClasses();

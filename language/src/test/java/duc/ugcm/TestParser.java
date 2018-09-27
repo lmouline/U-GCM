@@ -2,6 +2,11 @@ package duc.ugcm;
 
 import duc.ugcm.ast.*;
 import duc.ugcm.ast.Class;
+import duc.ugcm.ast.type.*;
+import duc.ugcm.ast.type.Double;
+import duc.ugcm.ast.type.Float;
+import duc.ugcm.ast.type.Long;
+import duc.ugcm.ast.type.Short;
 import duc.ugcm.parser.Parser;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.String;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -111,49 +117,49 @@ public class TestParser {
         Property prop = theClass.getProperty("att1");
         Assertions.assertTrue(prop instanceof Attribute);
         Attribute att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Short, att.getType());
+        Assertions.assertEquals(Short.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att2");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Int, att.getType());
+        Assertions.assertEquals(Int.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att3");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Long, att.getType());
+        Assertions.assertEquals(Long.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att4");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Bool, att.getType());
+        Assertions.assertEquals(Bool.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att5");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Float, att.getType());
+        Assertions.assertEquals(Float.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att6");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Double, att.getType());
+        Assertions.assertEquals(Double.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("att7");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.Char, att.getType());
+        Assertions.assertEquals(Char.getInstance(), att.getType());
         Assertions.assertFalse(att.isId());
 
         prop = theClass.getProperty("myAttId");
         Assertions.assertTrue(prop instanceof Attribute);
         att = (Attribute) prop;
-        Assertions.assertEquals(PrimitiveType.String, att.getType());
+        Assertions.assertEquals(duc.ugcm.ast.type.String.getInstance(), att.getType());
         Assertions.assertTrue(att.isId());
 
     }

@@ -24,7 +24,7 @@ public interface ${class.name} extends org.kevoree.modeling.api.KObject#foreach(
     public ${mmPackName}.${mmName}View view();
 }
 #* @vtlvariable name="class" type="duc.ugcm.ast.Class" *#
-#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.PrimitiveTypeHelper" *#
+#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.TypeHelper" *#
 #* @vtlvariable name="helper" type="duc.ugcm.generator.kmf.JavaGeneratorHelper" *#
 #* @vtlvariable name="mmPackName" type="java.lang.String" *#
 #* @vtlvariable name="mmName" type="java.lang.String" *#

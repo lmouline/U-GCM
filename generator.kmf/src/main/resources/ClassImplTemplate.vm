@@ -88,7 +88,7 @@ public class ${class.name}Impl extends org.kevoree.modeling.api.abs.AbstractKObj
 }
 
 #* @vtlvariable name="class" type="duc.ugcm.ast.Class" *#
-#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.PrimitiveTypeHelper" *#
+#* @vtlvariable name="primHelper" type="duc.ugcm.generator.kmf.TypeHelper" *#
 #* @vtlvariable name="helper" type="duc.ugcm.generator.kmf.JavaGeneratorHelper" *#
 #* @vtlvariable name="mmPackName" type="java.lang.String" *#
 #* @vtlvariable name="mmName" type="java.lang.String" *#

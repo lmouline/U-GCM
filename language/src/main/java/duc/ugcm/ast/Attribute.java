@@ -1,13 +1,15 @@
 package duc.ugcm.ast;
 
 
+import duc.ugcm.ast.type.Type;
+
 public class Attribute implements Property {
     private String name;
-    private PrimitiveType type;
+    private Type type;
     private boolean isId;
     private int index;
 
-    public Attribute(String name, PrimitiveType type, boolean isId) {
+    public Attribute(String name, Type type, boolean isId) {
         this.name = name;
         this.type = type;
         this.isId = isId;
@@ -31,11 +33,11 @@ public class Attribute implements Property {
         this.name = name;
     }
 
-    public PrimitiveType getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(PrimitiveType type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
