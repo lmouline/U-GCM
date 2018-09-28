@@ -15,18 +15,39 @@ public class Meta${class.name} extends org.kevoree.modeling.api.abs.AbstractMeta
     #if($prop.class.name.equals("duc.ugcm.ast.Attribute"))
 public static final org.kevoree.modeling.api.meta.MetaAttribute ATT_${prop.name.toUpperCase()} = new org.kevoree.modeling.api.abs.AbstractMetaAttribute("${prop.name}", ${prop.index}, 0, #if($prop.isId())true#{else}false#end, ${primHelper.toKMFType($prop.getType())}, org.kevoree.modeling.api.extrapolation.DiscreteExtrapolation.instance());
     #elseif($prop.class.name.equals("duc.ugcm.ast.Relation"))
+    #if($helper.haveOposite($prop))
 public static final org.kevoree.modeling.api.meta.MetaReference REF_${prop.name.toUpperCase()} = new org.kevoree.modeling.api.abs.AbstractMetaReference("${prop.name}", ${prop.index}, ${prop.isContained()}, !${prop.isMultiple()},
-            new org.kevoree.modeling.api.abs.LazyResolver() {
-                @Override
-                public org.kevoree.modeling.api.meta.Meta meta() {
-                    return ${prop.type.packName}.meta.Meta${prop.type.name}.getInstance();
-                }
-            }, null,new org.kevoree.modeling.api.abs.LazyResolver() {
-                @Override
-                public org.kevoree.modeling.api.meta.Meta meta() {
-                    return ${class.packName}.meta.Meta${class.name}.getInstance();
-                }
-            });
+    new org.kevoree.modeling.api.abs.LazyResolver() {
+        @Override
+        public org.kevoree.modeling.api.meta.Meta meta() {
+            return ${prop.type.packName}.meta.Meta${prop.type.name}.getInstance();
+        }
+    }, new org.kevoree.modeling.api.abs.LazyResolver() {
+        @Override
+        public org.kevoree.modeling.api.meta.Meta meta() {
+            return ${prop.type.packName}.meta.Meta${prop.type.name}.REF_${prop.getOppositeOf().name.toUpperCase()};
+        }
+     },new org.kevoree.modeling.api.abs.LazyResolver() {
+        @Override
+        public org.kevoree.modeling.api.meta.Meta meta() {
+            return ${class.packName}.meta.Meta${class.name}.getInstance();
+         }
+     });
+    #else
+public static final org.kevoree.modeling.api.meta.MetaReference REF_${prop.name.toUpperCase()} = new org.kevoree.modeling.api.abs.AbstractMetaReference("${prop.name}", ${prop.index}, ${prop.isContained()}, !${prop.isMultiple()},
+    new org.kevoree.modeling.api.abs.LazyResolver() {
+        @Override
+        public org.kevoree.modeling.api.meta.Meta meta() {
+            return ${prop.type.packName}.meta.Meta${prop.type.name}.getInstance();
+         }
+    }, null, new org.kevoree.modeling.api.abs.LazyResolver() {
+        @Override
+        public org.kevoree.modeling.api.meta.Meta meta() {
+            return ${class.packName}.meta.Meta${class.name}.getInstance();
+        }
+    });
+    #end
+
 
     #end
     #end
