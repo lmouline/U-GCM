@@ -11,31 +11,31 @@ public class TypeHelper {
 
     public java.lang.String toJavaType(Type type) {
         if(type instanceof Short) {
-            return "short";
+            return "java.lang.Short";
         }
 
         if(type instanceof Int) {
-            return "int";
+            return "java.lang.Integer";
         }
 
         if(type instanceof Long) {
-            return "long";
+            return "java.lang.Long";
         }
 
         if(type instanceof Float) {
-            return "float";
+            return "java.lang.Float";
         }
 
         if(type instanceof Double) {
-            return "double";
+            return "java.lang.Double";
         }
 
         if(type instanceof Char) {
-            return "char";
+            return "java.lang.Char";
         }
 
         if(type instanceof Bool) {
-            return "boolean";
+            return "java.lang.Boolean";
         }
 
         if(type instanceof String) {
