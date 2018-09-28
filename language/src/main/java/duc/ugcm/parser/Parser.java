@@ -4,6 +4,9 @@ import duc.ugcm.UGCMLexer;
 import duc.ugcm.UGCMParser;
 import duc.ugcm.ast.*;
 import duc.ugcm.ast.Class;
+import duc.ugcm.ast.type.Bernoulli;
+import duc.ugcm.ast.type.Bool;
+import duc.ugcm.ast.type.Double;
 import duc.ugcm.ast.type.Type;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
@@ -76,12 +79,15 @@ public class Parser {
         for (int i = 0; i < classes.size(); i++) {
             Class c = classes.get(i);
 
-            int idxProp = INIT_IDX_PROP;
-
             Set<String> visitedClass = new HashSet<>();
             Map<String, Property> allProperties = new HashMap<>();
             deepCollectProperties(c, allProperties, visitedClass);
 
+            breakUncertainProperties(allProperties);
+
+            c.deleteAllProp();
+
+            int idxProp = INIT_IDX_PROP;
             for (Property p: allProperties.values()) {
                 Property pCloned = p.clone();
                 pCloned.setIndex(idxProp);
@@ -89,6 +95,25 @@ public class Parser {
                 c.addProperty(pCloned);
             }
 
+        }
+    }
+
+    private void breakUncertainProperties(Map<String, Property> properties) {
+        Object[] keys = properties.keySet().toArray();
+
+        for (Object keyProp : keys) {
+            Property prop = properties.get(keyProp);
+            if (prop instanceof Attribute) {
+                Attribute casted = (Attribute) prop;
+                if (casted.getType().equals(Bernoulli.getInstance())) {
+                    properties.remove(casted.getName());
+
+                    Attribute val = new Attribute("__bernoulli__" + casted.getName() + "__value", Bool.getInstance(), casted.isId());
+                    properties.put(val.getName(), val);
+                    Attribute conf = new Attribute("__bernoulli__" + casted.getName() + "__confidence", Double.getInstance(), false);
+                    properties.put(conf.getName(), conf);
+                }
+            }
         }
     }
 

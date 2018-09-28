@@ -65,10 +65,6 @@ public class Class {
     public List<Property> getProperties() {
         List<Property> res = new ArrayList<>();
 
-//        Set<String> visitedClass = new HashSet<>();
-//        Map<String, Property> allProperties = new HashMap<>();
-//        deepCollectProperties(allProperties, visitedClass);
-
         for(String keyProp: properties.keySet()) {
             res.add(properties.get(keyProp));
         }
@@ -76,21 +72,9 @@ public class Class {
         return res;
     }
 
-//    private void deepCollectProperties(Map<String, Property> props, Set<String> visited) {
-//        if(visited.contains(this.name)) {
-//            return;
-//        }
-//
-//        for(String keyProp: this.properties.keySet()) {
-//            if(!props.containsKey(keyProp)) {
-//                props.put(keyProp, this.properties.get(keyProp));
-//            }
-//        }
-//        visited.add(this.name);
-//        for(Class parent: parents) {
-//            parent.deepCollectProperties(props, visited);
-//        }
-//    }
+    public void deleteAllProp() {
+        properties.clear();
+    }
 
     public int getIndex() {
         return this.index;

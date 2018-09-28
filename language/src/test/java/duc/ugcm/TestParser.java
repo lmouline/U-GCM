@@ -112,7 +112,7 @@ public class TestParser {
         Class theClass = model.getClass("A");
         Assertions.assertNotNull(theClass);
 
-        Assertions.assertEquals(9, theClass.getProperties().size());
+        Assertions.assertEquals(11, theClass.getProperties().size());
 
         Property prop = theClass.getProperty("att1");
         Assertions.assertTrue(prop instanceof Attribute);
@@ -161,6 +161,18 @@ public class TestParser {
         att = (Attribute) prop;
         Assertions.assertEquals(duc.ugcm.ast.type.String.getInstance(), att.getType());
         Assertions.assertTrue(att.isId());
+
+        prop = theClass.getProperty("__bernoulli__att9__value");
+        Assertions.assertTrue(prop instanceof Attribute);
+        att = (Attribute) prop;
+        Assertions.assertEquals(duc.ugcm.ast.type.Bool.getInstance(), att.getType());
+        Assertions.assertFalse(att.isId());
+
+        prop = theClass.getProperty("__bernoulli__att9__confidence");
+        Assertions.assertTrue(prop instanceof Attribute);
+        att = (Attribute) prop;
+        Assertions.assertEquals(duc.ugcm.ast.type.Double.getInstance(), att.getType());
+        Assertions.assertFalse(att.isId());
 
     }
 

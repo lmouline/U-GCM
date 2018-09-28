@@ -22,6 +22,7 @@ public class PrimitiveTypeHelper {
             case Short.NAME: return Short.getInstance();
             case String.NAME: return String.getInstance();
 
+            case Bernoulli.NAME: return Bernoulli.getInstance();
         }
 
         throw new RuntimeException("PrimitiveType " + name + " is unknown.");

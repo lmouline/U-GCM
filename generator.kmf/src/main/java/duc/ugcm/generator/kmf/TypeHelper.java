@@ -42,6 +42,10 @@ public class TypeHelper {
             return "java.lang.String";
         }
 
+        if(type instanceof Bernoulli) {
+            return "duc.probability.discrete.Bernoulli";
+        }
+
         throw new RuntimeException("Unrecognized type: " + type.getClass().getTypeName());
 
     }
@@ -84,4 +88,5 @@ public class TypeHelper {
         throw new RuntimeException("Unrecognized type: " + type.getClass().getTypeName());
 
     }
+
 }

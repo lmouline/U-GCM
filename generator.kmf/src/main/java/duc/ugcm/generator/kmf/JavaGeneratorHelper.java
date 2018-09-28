@@ -1,5 +1,7 @@
 package duc.ugcm.generator.kmf;
 
+import duc.ugcm.ast.Relation;
+
 public class JavaGeneratorHelper {
     public String upperFirst(String aString) {
         if(aString == null || aString.length() == 0) {
@@ -20,5 +22,9 @@ public class JavaGeneratorHelper {
         }
 
         return new String[]{metaModelName.substring(0,lastDot), upperFirst(metaModelName.substring(lastDot + 1))};
+    }
+
+    public boolean haveOposite(Relation relation) {
+        return relation.getOppositeOf() != null;
     }
 }
